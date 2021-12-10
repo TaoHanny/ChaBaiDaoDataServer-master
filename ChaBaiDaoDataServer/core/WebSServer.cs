@@ -17,9 +17,18 @@ namespace DataServer.core
 
         public void Start()
         {
-            Thread thread = new Thread(new ThreadStart(init));
-            thread.Start();
-            Logcat.d(TAG, "开启WebSokcet");
+            try
+            {
+                Thread thread = new Thread(new ThreadStart(init));
+                thread.Start();
+                Logcat.d(TAG, "Start()  开启WebSokcet");
+            }
+            catch(Exception e)
+            {
+                Logcat.e(TAG, "Start()  "+e.ToString());
+            }
+
+           
         }
         private void init()
         {
@@ -27,26 +36,32 @@ namespace DataServer.core
              wssv = new WebSocketServer(21321);
              wssv.AddWebSocketService<Chat>("/Chat");
              wssv.Start();
-             Logcat.w(TAG, "WebSocketServer.isListening = " + wssv.IsListening);
+             Logcat.w(TAG, "init()  WebSocketServer.isListening = " + wssv.IsListening);
            
         }
 
         public void Stop()
         {
-            if (wssv != null)
+            try
             {
-                wssv.RemoveWebSocketService("/Chat");
-                wssv.Stop();
-                wssv = null;
-                Logcat.d(TAG, "关闭WebSokcet");
+                if (wssv != null)
+                {
+                    wssv.RemoveWebSocketService("/Chat");
+                    wssv.Stop();
+                    wssv = null;
+                    Logcat.d(TAG, "Stop()  关闭WebSokcet");
+                }
             }
-            
+            catch(Exception e)
+            {
+                Logcat.e(TAG, "Stop() " + e.ToString());
+            }
         }
-        
+        private static Dictionary<string, string> nameList = new Dictionary<string, string>();
         public class Chat : WebSocketBehavior
         {
 
-            private Dictionary<string, string> nameList = new Dictionary<string, string>();
+            
             protected override void OnMessage(MessageEventArgs e)
             {
 
@@ -57,7 +72,7 @@ namespace DataServer.core
                 try
                 {
                     var obj = JsonConvert.DeserializeObject<JsonDto>(text);
-                    Logcat.d(TAG,"收到消息：" + obj.content + " 类型：" + obj.type + " id:" + ID);
+                    Logcat.d(TAG, "OnMessage()  收到消息：" + obj.content + " 类型：" + obj.type + " id:" + ID);
 
                     switch (obj.type)
                     {
@@ -82,8 +97,7 @@ namespace DataServer.core
                             break;
 
                     }
-                }
-                catch (Exception exception)
+                }catch (Exception exception)
                 {
                     Logcat.e(TAG, exception.Message);
                 }
@@ -92,7 +106,7 @@ namespace DataServer.core
             }
             protected override void OnClose(CloseEventArgs e)
             {
-                Logcat.d(TAG, "连接关闭" + ID);
+                Logcat.d(TAG, " OnClose() 连接关闭" + ID);
                 Broadcast(string.Format("{0}下线，共有{1}台在线", nameList[ID], Sessions.Count), "3");
                 nameList.Remove(ID);
                 WebSServer.NotifiyDevStatus(STATUS_TYPE_REMOVE, nameList);
@@ -103,15 +117,16 @@ namespace DataServer.core
 
             protected override void OnError(WebSocketSharp.ErrorEventArgs e)
             {
-                Logcat.e(TAG, e.Message);
+                Logcat.e(TAG, "OnError()  " + e.Message);
                 nameList.Clear();
                 WebSServer.NotifiyDevStatus(STATUS_TYPE_ERROR,nameList);
             }
 
             protected override  void OnOpen()
             {
-                Logcat.d(TAG, "建立连接" + ID);
+                Logcat.d(TAG, "OnOpen()  建立连接" + ID);
                 nameList.Add(ID, "设备" + Sessions.Count);
+                Logcat.d(TAG,"OnOpen() 当前nameList.size = "+nameList.Count);
                 Broadcast(string.Format("{0}上线了，共有{1}台在线", nameList[ID], Sessions.Count), "3");
                 NotifiyDevStatus(STATUS_TYPE_ADD, nameList);
             }

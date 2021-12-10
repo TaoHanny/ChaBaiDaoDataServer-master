@@ -1,15 +1,14 @@
 ﻿using ChaBaiDaoDataServer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using ChaBaiDaoDataServer.utils;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace DataServer.core
 {
-    public class UDPTools
+    public class OldUDPTools
     {
         private string TAG = "UDPTools";
 
@@ -29,18 +28,16 @@ namespace DataServer.core
             byte[] buf = Encoding.Default.GetBytes("This is UDP broadcast");
             Thread receThread = new Thread(new ThreadStart(RecvThread));
             receThread.Start();
-            sendDevConnectStatas(true);
             while (startBool)
             {
-                string ip = getIPv4();
+                string ip = IPAddressUtil.getIPv4();
                 if (ip != null && !"127.0.0.1".Equals(ip))
                 {
-                    Logcat.d(TAG, "Send() IP = "+ip);
+                    Logcat.d(TAG, "Send() IP = " + ip);
                     byte[] ipBuffer = Encoding.Default.GetBytes(ip);
                     UDPsend.Send(ipBuffer, ipBuffer.Length, endpoint);
                 }
-                
-                Thread.Sleep(5000);
+                Thread.Sleep(10000);
             }
 
         }
@@ -53,58 +50,31 @@ namespace DataServer.core
             {
                 byte[] buf = UDPrece.Receive(ref endpoint);
                 string msg = Encoding.Default.GetString(buf);
-                if(msg==null || msg.Length <= 2)
+                if(msg==null || !IPAddressUtil.IsIpAddress(msg))
                 {
                     continue;
                 }
                 Logcat.d(TAG, "RecvThread() "+msg);
-
+               
+               if (!msg.Equals(currentIP))
+               {
+                   currentIP = msg;
+               }
             }
         }
 
+        public static string currentIP = "127.0.0.1";
 
         public void stop()
         {
             startBool = false;
-            sendDevConnectStatas(false);
         }
 
 
-        private void sendDevConnectStatas(bool connectBool)
-        {
-            //Logcat.d(TAG, "sendDevConnectStatas() connectBool = " + connectBool);
-            if (mdnsInterface != null)
-            {
-                mdnsInterface.DevConnectStatas(connectBool);
-            }
-        }
 
-        private UDPInterface mdnsInterface;
 
-        public void setUDPInterface(UDPInterface interfaceImp)
-        {
-            mdnsInterface = interfaceImp;
-        }
 
-        public interface UDPInterface
-        {
-            void DevConnectStatas(bool connectStatus);
-        }
 
-        public string getIPv4()
-        {
-            string HostName = Dns.GetHostName();
-            IPHostEntry IpEntry = Dns.GetHostEntry(HostName);
-            for (int i = 0; i < IpEntry.AddressList.Length; i++)
-            {
-                if (IpEntry.AddressList[i].AddressFamily == AddressFamily.InterNetwork)
-                {
-                    string ip = IpEntry.AddressList[i].ToString();
-                    Logcat.d(TAG, "getIPv4() " + ip);
-                    return IpEntry.AddressList[i].ToString();
-                }
-            }
-            return null;
-        }
+        
     }
 }

@@ -8,7 +8,7 @@ namespace ChaBaiDaoDataServer
     {
         public static readonly log4net.ILog logInfo = log4net.LogManager.GetLogger("Logging");
         //public static readonly log4net.ILog logError = log4net.LogManager.GetLogger("Error");
-        private static bool isOpen = false;
+        private static bool isOpen = true;
         public static void isOpenLog(bool openBool)
         {
             isOpen = openBool;

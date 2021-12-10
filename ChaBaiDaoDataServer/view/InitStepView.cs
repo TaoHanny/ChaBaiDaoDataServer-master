@@ -16,13 +16,13 @@ namespace DataServer.view
 
         private string TAG = "InitStepView";
         private static string STATUS_OK_ONE = "数据库连接正常！";
-        private static string STATUS_OK_TWO = "数拓设备已成功加入！";
+        private static string STATUS_OK_TWO = " 正在等待数拓设备加入\n(若长时间等待建议检\n查POS和设备是否在\n同一路由器下;或检查\n设备版本或配置)";
         private static string STATUS_OK_THRER = "一切已准备就绪！";
         private static string STATUS_INIT_ONE = "检查数据库";
         private static string STATUS_INIT_TWO = "等待数拓设备加入";
         private static string STATUS_INIT_THRER = "检查数据保活";
-        private static string STATUS_NO_ONE = "数据库连接失败，\n可能是用户名\n或者密码错误，\n请联系哗啦啦";
-        private static string STATUS_NO_TWO = "请检查PC网络适配器\n是否存在多个网络接口，\n或检查数拓设备是否\n和PC在同一路由器下";
+        private static string STATUS_NO_ONE = "数据库连接失败\n可能是用户名\n或者密码错误，\n请联系哗啦啦";
+        private static string STATUS_NO_TWO = "POS网络存在问题，请检查PC网络适配器\n是否可用或者是否已连接网络\n";
         private static string STATUS_NO_THRER = "若此步骤失败，可尝试关闭重启启动应用！";
         private  string[] StepsInit = new string[] {
         STATUS_INIT_ONE,
@@ -54,9 +54,9 @@ namespace DataServer.view
         private Dictionary<int, int> statusItems = new Dictionary<int, int>();
 
         private string[] Steps = new string[] {
-        "正在检查数据库",
-        "",
-        ""};
+        "数据库连接",
+        "数拓设备检测",
+        "数据通讯检测"};
         public void ChangedStatus(int index , int statusInt)
         {
             statusItems[index] = statusInt;

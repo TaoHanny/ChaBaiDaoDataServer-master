@@ -148,7 +148,7 @@ namespace DataServer.view
                     StatusChanged(STATUS_REMOVE);
                     break;
                 case 14:
-                    string contentError = "实时通信已中断";
+                    string contentError = "实时通信已中断,可能会影响数据显示";
                     setLabel(contentError);
                     StatusChanged(STATUS_OFFLINE);
                     break;
@@ -165,6 +165,7 @@ namespace DataServer.view
 
         private void setLabel(string msg)
         {
+            Logcat.d(TAG, "setLabel() msg = " + msg);
             if (this.lblTitle.InvokeRequired)
             {
                 while (!this.lblTitle.IsHandleCreated)

@@ -34,7 +34,7 @@ namespace DataServer.view
             // 
             // ucStep1
             // 
-            this.ucStep1.BackColor = System.Drawing.Color.Transparent;
+            this.ucStep1.BackColor = System.Drawing.Color.White;
             this.ucStep1.Dock = System.Windows.Forms.DockStyle.Top;
             this.ucStep1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ucStep1.ImgCompleted = null;
@@ -42,25 +42,26 @@ namespace DataServer.view
             this.ucStep1.Location = new System.Drawing.Point(0, 0);
             this.ucStep1.Margin = new System.Windows.Forms.Padding(0);
             this.ucStep1.Name = "ucStep1";
-            this.ucStep1.Size = new System.Drawing.Size(524, 200);
+            this.ucStep1.Size = new System.Drawing.Size(460, 160);
             this.ucStep1.StepBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(189)))), ((int)(((byte)(189)))));
             this.ucStep1.StepFontColor = System.Drawing.Color.White;
             this.ucStep1.StepForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.ucStep1.StepIndex = 0;
             this.ucStep1.Steps = new string[] {
-        "正在检查数据库",
-        "",
-        ""};
-            this.ucStep1.StepWidth = 35;
+        "数据库连接",
+        "数拓设备检测",
+        "数拓通讯检测"};
+            this.ucStep1.StepWidth = 30;
             this.ucStep1.TabIndex = 0;
             // 
             // InitStepView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.ucStep1);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "InitStepView";
-            this.Size = new System.Drawing.Size(524, 200);
+            this.Size = new System.Drawing.Size(460, 160);
             this.ResumeLayout(false);
 
         }
