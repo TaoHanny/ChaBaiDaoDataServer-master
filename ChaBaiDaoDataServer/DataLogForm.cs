@@ -25,6 +25,10 @@ namespace DataServer
         private string HTTP_KDS_OK = "     叫号接口运行正常";
         private string HTTP_KDS_ERROR = "     叫号接口访问失败，可能是KDS运行异常或者是KDS未打开";
         private System.Windows.Forms.Label[] LabelArr;
+        private Thread menuThread;
+        private Thread soldOutThread;
+        private Thread orderThread;
+        private Thread callThread;
         public DataLogForm()
         {
             InitializeComponent();
@@ -59,13 +63,18 @@ namespace DataServer
             list.Clear();
         }
 
+        
         private void DataLogForm_FormLoad(object sender, System.EventArgs e)
         {
             if (dataMsg == null) TextStatusTitle.Text = TITLE_ERROR;
-            Thread menuThread = new Thread(new ThreadStart(onStartCheckMenu));
-            Thread soldOutThread = new Thread(new ThreadStart(onStartCheckSoldOut));
-            Thread orderThread = new Thread(new ThreadStart(onStartCheckOrder));
-            Thread callThread = new Thread(new ThreadStart(onStartCheckCall));
+            menuThread = null;
+            soldOutThread = null;
+            orderThread = null;
+            callThread = null;
+            menuThread = new Thread(new ThreadStart(onStartCheckMenu));
+            soldOutThread = new Thread(new ThreadStart(onStartCheckSoldOut));
+            orderThread = new Thread(new ThreadStart(onStartCheckOrder));
+            callThread = new Thread(new ThreadStart(onStartCheckCall));
             menuThread.Start();
             soldOutThread.Start();
             orderThread.Start();
@@ -197,6 +206,7 @@ namespace DataServer
             if (list.Count == 4) { TextStatusTitle.Text = "检测完成！"; }
             foreach(DataStatus dataStatus in list)
             {
+                if (index > 3) index = 3;
                 if (dataStatus.statusBool)
                 {
                     LabelArr[index].Text = dataStatus.textStr;

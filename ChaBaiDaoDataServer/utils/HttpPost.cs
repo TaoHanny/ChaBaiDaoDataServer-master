@@ -1,11 +1,8 @@
 ﻿using ChaBaiDaoDataServer.Databean;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace ChaBaiDaoDataServer.utils
 {
@@ -25,10 +22,15 @@ namespace ChaBaiDaoDataServer.utils
                 request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.AddParameter("msgType", "410");
                 IRestResponse response = client.Execute(request);
-                Logcat.d(" HttpPost", "HttpMenu() " + response.Content);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    return true;
+                    string content = response.Content;
+                    ResponseData responseData = JsonConvert.DeserializeObject<ResponseData>(content);
+                    Logcat.d(" HttpPost", "HttpMenu() " + responseData.msg);
+                    if (responseData.code == "000")
+                    {
+                        return true;
+                    } 
                 }
             }catch(Exception e)
             {
@@ -39,26 +41,31 @@ namespace ChaBaiDaoDataServer.utils
 
         public static bool HttpSoldOut(string HttpServerIP, int HttpServerPort)
         {
+            string url = "http://" + HttpServerIP + ":" + HttpServerPort + "/saas/openapi/getsoldoutfoodlst";
+            var client = new RestClient(url);
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
             try
             {
-                string url = "http://" + HttpServerIP + ":" + HttpServerPort + "/saas/openapi/getsoldoutfoodlst";
-                var client = new RestClient(url);
-                client.Timeout = -1;
-                var request = new RestRequest(Method.POST);
+                
                 request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.AddParameter("msgType", "410");
                 IRestResponse response = client.Execute(request);
-                Logcat.d(" HttpPost", "HttpSoldOut() " + response.Content);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    return true;
+                    string content = response.Content;
+                    ResponseData responseData = JsonConvert.DeserializeObject<ResponseData>(content);
+                    Logcat.d(" HttpPost", "HttpSoldOut() " + responseData.msg);
+                    if (responseData.code == "000")
+                    {
+                        return true;
+                    }
                 }
             }
             catch(Exception e)
             {
                 Logcat.e(TAG, "HttpSoldOut() "+e.ToString());
             }
-            
             return false;
         }
 
@@ -67,22 +74,18 @@ namespace ChaBaiDaoDataServer.utils
             try
             {
                 string url = "http://" + HttpServerIP + ":" + HttpServerPort + "/saas/openapi/getcurrentorder";
-                HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
-                string param = "";
-                byte[] bs = Encoding.ASCII.GetBytes(param);
-                req.Method = "POST";
-                req.ContentType = "application/x-www-form-urlencoded";
-                req.Timeout = -1;
-                using (Stream reqStream = req.GetRequestStream())
+                var client = new RestClient(url);
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                IRestResponse response = client.Execute(request);
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    reqStream.Write(bs, 0, bs.Length);
-                }
-                using (HttpWebResponse wr = (HttpWebResponse)req.GetResponse())
-                {
-                    Stream stream = wr.GetResponseStream();
-                    StreamReader stringReader = new StreamReader(stream);
-                    Logcat.d(" HttpPost", "HttpOrder" + stringReader.ReadToEnd());
-                    if (wr.StatusCode == HttpStatusCode.OK)
+                    string content = response.Content;
+                    ResponseData responseData = JsonConvert.DeserializeObject<ResponseData>(content);
+                    Logcat.d(" HttpPost", "HttpOrder() " + responseData.msg);
+                    if (responseData.code == "000")
                     {
                         return true;
                     }

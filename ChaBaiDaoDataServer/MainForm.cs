@@ -258,19 +258,11 @@ namespace ChaBaiDaoDataServer
         private void ToolStripMenuItemExit_Click(object sender, EventArgs e)
         {
             Logcat.d(TAG, "ToolStripMenuItemExit_Click() closing");
-            if (FrmDialog.ShowDialog(this, "请问你确认要退出吗？可能会导致数拓屏幕数据不显示", "提示", true) == System.Windows.Forms.DialogResult.OK)
-            {
-                notifyIcon1.Visible = false;
-                System.Environment.Exit(System.Environment.ExitCode);
-                this.Close();
-                this.Dispose();
-                
-                Application.Exit();
-            }
-            else
-            {
-                return;
-            }
+            notifyIcon1.Visible = false;
+            System.Environment.Exit(System.Environment.ExitCode);
+            this.Close();
+            this.Dispose();
+            Application.Exit();
         }
        
         private void ToolStripMenuItemBoot_Click(object sender, EventArgs e)
@@ -309,19 +301,11 @@ namespace ChaBaiDaoDataServer
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Logcat.d(TAG, "MainForm() closing");
-            if (FrmDialog.ShowDialog(this, "请问你确认要退出吗？可能会导致数拓屏幕数据不显示", "提示", true) == System.Windows.Forms.DialogResult.OK)
-            {
-                e.Cancel = false;
-                System.Environment.Exit(System.Environment.ExitCode);
-                this.Close();
-                this.Dispose();
-                
-                Application.Exit();
-            }
-            else
-            {
-                e.Cancel = true;
-            }
+            e.Cancel = false;
+            System.Environment.Exit(System.Environment.ExitCode);
+            this.Close();
+            this.Dispose();
+            Application.Exit();
         }
 
 

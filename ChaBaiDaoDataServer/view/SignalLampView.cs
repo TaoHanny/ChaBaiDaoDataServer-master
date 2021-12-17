@@ -118,6 +118,7 @@ namespace DataServer.view
                     foreach (string key in nameList.Keys)
                     {
                         string name = nameList[key];
+                        if (!name.Contains("screenID")) continue;
                         content += name + "已上线，正在通信\n";
                     }
                     setLabel(content);
@@ -128,6 +129,7 @@ namespace DataServer.view
                     foreach(string key in nameList.Keys)
                     {
                         string name = nameList[key];
+                        if (!name.Contains("screenID")) continue;
                         contentBeat += name + "\n";
                     }
                     setLabel(contentBeat);
@@ -138,6 +140,7 @@ namespace DataServer.view
                     foreach(string key in nameList.Keys)
                     {
                         string name = nameList[key];
+                        if (!name.Contains("screenID")) continue;
                         contentRemove += name + "，但有设备下线\n";
                     }
                     if (contentRemove == null)
